@@ -109,8 +109,12 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
+    
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      shell: bash
+      run: |
+        mvn -B package --file pom.xml
+        cp target/my-app-1.0-SNAPSHOT.jar docker/
 
     - name: Build Docker Image with latest tag
       uses: docker/build-push-action@v3
@@ -119,8 +123,7 @@ jobs:
         load: true
         push: false
         tags: myapp:latest
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+
     - name: Run ivan Docker Image CVE Scan (CrowdStrike)
       shell: bash
       run: |
