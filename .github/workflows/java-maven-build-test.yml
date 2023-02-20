@@ -10,12 +10,11 @@ on:
       version:
         type: string
         default: '0.3.0'
-    secrets: 
-      falcon-client-id:
-        required: true
-      falcon-client-secret:
-        required: true
-      
+    # secrets: 
+    #   falcon-client-id:
+    #     required: true
+    #   falcon-client-secret:
+    #     required: true
 jobs:
   build:
     name: Build and Test
@@ -126,8 +125,8 @@ jobs:
         ./ivan -region us-2 -image myapp:latest > Docker_image_CVE.json
       # here region is FALCON's Cloud region
       env:
-        FALCON_CLIENT_ID: ${{ inputs.falcon-client-id }}
-        FALCON_CLIENT_SECRET: ${{ inputs.falcon-client-secret }}
+        FALCON_CLIENT_ID: ${{ secrets.FALCON_IVAN_CLIENT_ID }}
+        FALCON_CLIENT_SECRET: ${{ secrets.FALCON_IVAN_CLIENT_SECRET }}
     
     - name: Publishing result on Build & Test summary Section
       shell: bash
