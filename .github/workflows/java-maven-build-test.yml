@@ -7,15 +7,15 @@ on:
         required: false
         type: string
         default: '11'
-      falcon-client-id:
-        type: string
-        required: true
-      falcon-client-secret:
-        type: string
-        required: true
       version:
         type: string
         default: '0.3.0'
+    secrets: 
+      falcon-client-id:
+        required: true
+      falcon-client-secret:
+        required: true
+      
 jobs:
   build:
     name: Build and Test
