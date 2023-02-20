@@ -39,8 +39,8 @@ jobs:
           load: true
           push: false
           tags: myapp:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max
     
   cfn-nag-scan:
     runs-on: ubuntu-latest
