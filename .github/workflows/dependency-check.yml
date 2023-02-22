@@ -8,7 +8,7 @@ on:
         type: string
         default: '11'
 jobs:
-  Ivan-scan:
+  dependency-check:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
