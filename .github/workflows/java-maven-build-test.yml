@@ -29,3 +29,4 @@ jobs:
     needs: build
     with:
       version: ${{ inputs.version }}  
+    secrets: inherit
