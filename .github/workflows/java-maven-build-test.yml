@@ -10,23 +10,14 @@ on:
       version:
         type: string
         default: '0.3.0'
-    secrets:
-        dockerhub-username:
-          description: 'Username to login to DockerHub for extended pull rate limits'
-          required: false
-        dockerhub-token:
-          description: 'Personal Access Token to DockerHub for extended pull rate limits'
-          required: false
+    secrets: inherit
 jobs:
   build:
     uses: cnighojkar/myworkflows/.github/workflows/build.yml@main
     with:
       java-version: ${{ inputs.java-version }}  
     secrets: inherit
-      # dockerhub-username: "${{ secrets.DOCKERHUB_USERNAME }}"
-      # dockerhub-token: "${{ secrets.DOCKERHUB_TOKEN }}"
-
-
+    
   cfn-nag-scan:
     uses: cnighojkar/myworkflows/.github/workflows/cfn-nag-scan.yml@main
     needs: build

@@ -45,6 +45,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: docker/
-          load: false
-          push: true
+          load: true
+          push: false
           tags: myapp:latest
