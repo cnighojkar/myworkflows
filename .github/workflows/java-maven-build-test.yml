@@ -28,4 +28,4 @@ jobs:
     uses: cnighojkar/myworkflows/.github/workflows/checkov-scan.yml@main
     needs: build
     with:
-      version: ${{ inputs.java-version }}  
+      version: ${{ inputs.version }}  
