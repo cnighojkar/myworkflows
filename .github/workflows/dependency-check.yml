@@ -2,6 +2,11 @@ name: Dependency check usng org.owasp:dependency-check-maven
 
 on:
   workflow_call:
+    inputs:   
+      java-version:
+        required: false
+        type: string
+        default: '11'
 jobs:
   Ivan-scan:
     runs-on: ubuntu-latest
