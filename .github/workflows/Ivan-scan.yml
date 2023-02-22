@@ -22,7 +22,7 @@ jobs:
       shell: bash
       run: |
         mvn -B package --file pom.xml
-        cp target/my-app-1.0-SNAPSHOT.jar docker/
+        cp target/javulna-1.0-SNAPSHOT.jar docker/
 
     - name: Build Docker Image with latest tag
       uses: docker/build-push-action@v3

@@ -16,6 +16,12 @@ jobs:
     with:
       java-version: ${{ inputs.java-version }}  
     secrets: inherit
+  
+  dependency-check:
+    needs: build
+    uses: cnighojkar/myworkflows/.github/workflows/dependency-check.yml@main
+    with:
+      java-version: ${{ inputs.java-version }}
 
   cfn-nag-scan:
     uses: cnighojkar/myworkflows/.github/workflows/cfn-nag-scan.yml@main
