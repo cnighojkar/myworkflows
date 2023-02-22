@@ -10,14 +10,13 @@ on:
       version:
         type: string
         default: '0.3.0'
-    secrets: inherit
 jobs:
   build:
     uses: cnighojkar/myworkflows/.github/workflows/build.yml@main
     with:
       java-version: ${{ inputs.java-version }}  
     secrets: inherit
-    
+
   cfn-nag-scan:
     uses: cnighojkar/myworkflows/.github/workflows/cfn-nag-scan.yml@main
     needs: build
