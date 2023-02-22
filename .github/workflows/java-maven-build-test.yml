@@ -22,9 +22,9 @@ jobs:
     uses: cnighojkar/myworkflows/.github/workflows/build.yml@main
     with:
       java-version: ${{ inputs.java-version }}  
-    secrets:
-      dockerhub-username: "${{ secrets.dockerhub-username }}"
-      dockerhub-token: "${{ secrets.dockerhub-token }}"
+    secrets: inherit
+      # dockerhub-username: "${{ secrets.DOCKERHUB_USERNAME }}"
+      # dockerhub-token: "${{ secrets.DOCKERHUB_TOKEN }}"
 
 
   cfn-nag-scan:
