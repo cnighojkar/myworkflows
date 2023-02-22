@@ -25,7 +25,7 @@ jobs:
     needs: build
 
   Ivan-scan:
-    uses: cnighojkar/myworkflows/.github/workflows/checkov-scan.yml@main
+    uses: cnighojkar/myworkflows/.github/workflows/Ivan-scan.yml@main
     needs: build
     with:
       version: ${{ inputs.version }}  
