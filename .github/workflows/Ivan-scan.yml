@@ -9,7 +9,6 @@ on:
 jobs:
   Ivan-scan:
     runs-on: ubuntu-latest
-    needs: build
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
