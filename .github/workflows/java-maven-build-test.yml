@@ -1,4 +1,4 @@
-name: Build and Test workflow
+name: Build and Scan Workflow
 
 on:
   workflow_call:
@@ -12,129 +12,20 @@ on:
         default: '0.3.0'
 jobs:
   build:
-    name: Build and Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+    uses: cnighojkar/myworkflows/.github/workflows/build.yml@main
+    with:
+      java-version: ${{ inputs.java-version }}  
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-          cache: maven
-
-      - name: Build with Maven
-        shell: bash
-        run: |
-          mvn -B package --file pom.xml
-          cp target/my-app-1.0-SNAPSHOT.jar docker/
-
-      - name: Build Docker Image with latest tag
-        uses: docker/build-push-action@v3
-        with:
-          context: docker/
-          load: true
-          push: false
-          tags: myapp:latest
-    
   cfn-nag-scan:
-    runs-on: ubuntu-latest
+    uses: cnighojkar/myworkflows/.github/workflows/cfn-nag-scan.yml@main
     needs: build
-    steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: '3.0'
-        bundler-cache: true
 
-    - name: Install cfn nag
-      shell: bash
-      run: |
-          gem install cfn-nag
-
-    - name: Run CFN nag
-      shell: bash
-      continue-on-error: true
-      run: |
-          cfn_nag_scan --input-path cloudformation/ -o txt > cfn_nag_scan.txt
-
-    - name: Archive output
-      uses: actions/upload-artifact@v3
-      with:
-        name: cnf-nag-artifact
-        path: ${{ github.workspace }}/cfn_nag_scan.txt
-  
   checkov-scan:
-    runs-on: ubuntu-latest
+    uses: cnighojkar/myworkflows/.github/workflows/checkov-scan.yml@main
     needs: build
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-
-    - name: Install checkov
-      shell: bash
-      run: |
-          pip3 install checkov
-
-    - name: Run CFN Checkov
-      shell: bash
-      run: |
-          checkov -s -d ./ --quiet --output cli > cfn_checkov.out
-
-    - name: Archive output
-      uses: actions/upload-artifact@v3
-      with:
-        name: cnf-checkov-artifact
-        path: ${{ github.workspace }}/cfn_checkov.out
-
 
   Ivan-scan:
-    runs-on: ubuntu-latest
+    uses: cnighojkar/myworkflows/.github/workflows/checkov-scan.yml@main
     needs: build
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: maven
-    
-    - name: Build with Maven
-      shell: bash
-      run: |
-        mvn -B package --file pom.xml
-        cp target/my-app-1.0-SNAPSHOT.jar docker/
-
-    - name: Build Docker Image with latest tag
-      uses: docker/build-push-action@v3
-      with:
-        context: docker/
-        load: true
-        push: false
-        tags: myapp:latest
-
-    - name: Run ivan Docker Image CVE Scan (CrowdStrike)
-      shell: bash
-      run: |
-        curl --location --silent https://github.com/CrowdStrike/ivan/releases/download/${{ inputs.version }}/ivan_${{ inputs.version }}_Linux_x86_64.tar.gz | tar xvzf -
-        ./ivan -region us-2 -image myapp:latest > Docker_image_CVE.json
-      env:
-        FALCON_CLIENT_ID: ${{ secrets.FALCON_IVAN_CLIENT_ID }}
-        FALCON_CLIENT_SECRET: ${{ secrets.FALCON_IVAN_CLIENT_SECRET }}
-    
-    - name: Publishing result on Build & Test summary Section
-      shell: bash
-      run: | 
-        echo Found `cat Docker_image_CVE.json | jq '[.vulnerabilities[] | select(.Severity | contains("CRITICAL"))] | length'` CRITICAL CVEs >> $GITHUB_STEP_SUMMARY
-        echo Found `cat Docker_image_CVE.json | jq '[.vulnerabilities[] | select(.Severity | contains("HIGH"))] | length'` HIGH CVEs >> $GITHUB_STEP_SUMMARY
-        echo "Download the Artifact Docker-image-CVE to see more details" >> $GITHUB_STEP_SUMMARY
-
-    - name: Archive as artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: Docker-image-CVE
-        path: ${{ github.workspace }}/Docker_image_CVE.json
+    with:
+      version: ${{ inputs.java-version }}  

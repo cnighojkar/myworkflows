@@ -1,0 +1,30 @@
+name: CFN NAG Scan workflow
+on:
+  workflow_call:
+jobs:  
+  cfn-nag-scan:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v3
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+
+    - name: Install cfn nag
+      shell: bash
+      run: |
+          gem install cfn-nag
+
+    - name: Run CFN nag
+      shell: bash
+      continue-on-error: true
+      run: |
+          cfn_nag_scan --input-path cloudformation/ -o txt > cfn_nag_scan.txt
+
+    - name: Archive output
+      uses: actions/upload-artifact@v3
+      with:
+        name: cnf-nag-artifact
+        path: ${{ github.workspace }}/cfn_nag_scan.txt

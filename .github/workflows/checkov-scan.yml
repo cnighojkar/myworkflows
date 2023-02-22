@@ -1,0 +1,28 @@
+name: Checkov Scan workflow
+on:
+  workflow_call:
+jobs:
+  checkov-scan:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install checkov
+      shell: bash
+      run: |
+          pip3 install checkov
+
+    - name: Run CFN Checkov
+      shell: bash
+      run: |
+          checkov -s -d ./ --quiet --output cli > cfn_checkov.out
+
+    - name: Archive output
+      uses: actions/upload-artifact@v3
+      with:
+        name: cnf-checkov-artifact
+        path: ${{ github.workspace }}/cfn_checkov.out
