@@ -17,8 +17,9 @@ jobs:
     steps:
       - name: Set Image tag
         id: set-image-tag
-        run: echo "::set-output name=image_tag::$(echo ${GITHUB_SHA} | cut -c1-7)"
-        
+        # run: echo "::set-output name=image_tag::$(echo ${GITHUB_SHA} | cut -c1-7)"
+        run: echo "image_tag=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
+
       - uses: actions/checkout@v3
 
       - name: Set up JDK 11
