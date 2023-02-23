@@ -42,4 +42,4 @@ jobs:
           context: docker/
           load: false
           push: true
-          tags: javulna:latest
+          tags: chetann/javulna:latest
