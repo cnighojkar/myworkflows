@@ -6,9 +6,9 @@ on:
       version:
         type: string
         default: '0.3.0'
-    app-name:
+      app-name:
         type: string
-    short-sha:
+      short-sha:
         type: string
 jobs:
   Ivan-scan:
