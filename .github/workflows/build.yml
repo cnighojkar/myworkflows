@@ -36,10 +36,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Get short SHA
+        id: slug
+        run: echo "::set-output name=sha7::$(echo ${GITHUB_SHA} | cut -c1-7)"
+
       - name: Build Docker Image with latest tag
         uses: docker/build-push-action@v3
         with:
           context: docker/
           load: false
           push: true
-          tags: chetann/javulna:${GITHUB_SHA::6}
+          tags: chetann/javulna:${{ steps.slug.outputs.sha7 }}
