@@ -57,7 +57,7 @@ jobs:
       shell: bash
       run: |
         curl --location --silent https://github.com/CrowdStrike/ivan/releases/download/${{ inputs.version }}/ivan_${{ inputs.version }}_Linux_x86_64.tar.gz | tar xvzf -
-        ./ivan -region us-2 -image $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG > Docker_image_CVE.json
+        ./ivan -region us-2 -image chetann/javulna:${{ steps.set-image-tag.outputs.image_tag }} > Docker_image_CVE.json
       env:
         FALCON_CLIENT_ID: ${{ secrets.FALCON_IVAN_CLIENT_ID }}
         FALCON_CLIENT_SECRET: ${{ secrets.FALCON_IVAN_CLIENT_SECRET }}
