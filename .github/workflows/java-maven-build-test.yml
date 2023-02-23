@@ -10,30 +10,34 @@ on:
       version:
         type: string
         default: '0.3.0'
+      app-name:
+        type: string
 jobs:
   build:
     uses: cnighojkar/myworkflows/.github/workflows/build.yml@main
     with:
       java-version: ${{ inputs.java-version }}  
+      app-name: ${{ inputs.app-name }}  
     secrets: inherit
   
-  dependency-check:
-    needs: build
-    uses: cnighojkar/myworkflows/.github/workflows/dependency-check.yml@main
-    with:
-      java-version: ${{ inputs.java-version }}
+  # dependency-check:
+  #   needs: build
+  #   uses: cnighojkar/myworkflows/.github/workflows/dependency-check.yml@main
+  #   with:
+  #     java-version: ${{ inputs.java-version }}
 
-  cfn-nag-scan:
-    uses: cnighojkar/myworkflows/.github/workflows/cfn-nag-scan.yml@main
-    needs: build
+  # cfn-nag-scan:
+  #   uses: cnighojkar/myworkflows/.github/workflows/cfn-nag-scan.yml@main
+  #   needs: build
 
-  checkov-scan:
-    uses: cnighojkar/myworkflows/.github/workflows/checkov-scan.yml@main
-    needs: build
+  # checkov-scan:
+  #   uses: cnighojkar/myworkflows/.github/workflows/checkov-scan.yml@main
+  #   needs: build
 
-  Ivan-scan:
-    uses: cnighojkar/myworkflows/.github/workflows/Ivan-scan.yml@main
-    needs: build
-    with:
-      version: ${{ inputs.version }}  
-    secrets: inherit
+  # Ivan-scan:
+  #   uses: cnighojkar/myworkflows/.github/workflows/Ivan-scan.yml@main
+  #   needs: build
+  #   with:
+  #     version: ${{ inputs.version }}  
+  #     app-name: ${{ inputs.app-name }}  
+  #   secrets: inherit

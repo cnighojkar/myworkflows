@@ -6,6 +6,9 @@ on:
       version:
         type: string
         default: '0.3.0'
+    app-name:
+        required: true
+        type: string
 jobs:
   Ivan-scan:
     runs-on: ubuntu-latest
@@ -22,7 +25,7 @@ jobs:
       shell: bash
       run: |
         mvn -B package --file pom.xml
-        cp target/javulna-1.0-SNAPSHOT.jar docker/
+        cp target/${{inputs.app-name}}.jar docker/
 
     - name: Build Docker Image with latest tag
       uses: docker/build-push-action@v3
