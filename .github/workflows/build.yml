@@ -2,6 +2,10 @@ name: Build workflow
 
 on:
   workflow_call:
+    outputs:
+      short-sha:
+        description: "Short SHA for docker tag"
+        value: ${{ jobs.build.outputs.short-sha }}
     inputs:   
       java-version:
         required: false
@@ -14,6 +18,8 @@ jobs:
   build:
     name: Build and Docker Push
     runs-on: ubuntu-latest
+    outputs:
+      short-sha: ${{ steps.short-sha.outputs.sha7 }}
     steps:
       - uses: actions/checkout@v3
 
@@ -37,7 +43,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Get short SHA
-        id: slug
+        id: short-sha
         run: echo "::set-output name=sha7::$(echo ${GITHUB_SHA} | cut -c1-7)"
 
       - name: Build Docker Image with latest tag
@@ -46,4 +52,4 @@ jobs:
           context: docker/
           load: false
           push: true
-          tags: chetann/javulna:${{ steps.slug.outputs.sha7 }}
+          tags: chetann/javulna:${{ steps.short-sha.outputs.sha7 }}
