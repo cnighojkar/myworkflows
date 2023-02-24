@@ -22,10 +22,17 @@ jobs:
     - name: Dependency check with org.owasp:dependency-check-maven
       shell: bash
       run: |
-        mvn org.owasp:dependency-check-maven:8.1.0:check
+        mvn dependency-check:check -Dformat=CSV
+    
+    - name: Print CVE Summery on GITHUB_STEP_SUMMARY
+      shell: bash
+      run: |
+        docker run --rm -i jauderho/miller:latest --csv cut -f CVE,DependencyName < target/dependency-check-report.csv >> $GITHUB_STEP_SUMMARY
+        echo >> $GITHUB_STEP_SUMMARY
+        echo "Download the Artifact dependency-check-report to see more details" >> $GITHUB_STEP_SUMMARY
 
     - name: Archive dependency-check-report as artifact
       uses: actions/upload-artifact@v3
       with:
         name: dependency-check-report
-        path: ${{ github.workspace }}/target/dependency-check-report.html
+        path: ${{ github.workspace }}/target/dependency-check-report.csv
