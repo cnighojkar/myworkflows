@@ -1,0 +1,30 @@
+name: 'cfn-nag-action'
+description: 'CloudFormation Static Code Analysis Tool Suite with cfn-nag'
+inputs:
+  cloudformation-directory:
+    description: 'directory within git repo to scan cloudformation templates'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+
+    - name: Install cfn-nag
+      shell: bash
+      run: |
+          gem install cfn-nag
+
+    - name: Scanning Cloudformation templates using cfn_nag_scan
+      shell: bash
+      continue-on-error: true
+      run: |
+          cfn_nag_scan --fail-on-warnings --input-path ${{ inputs.cloudformation-directory }}* --output-format txt > cfn_nag_scan.out
+
+    - name: Archive output
+      uses: actions/upload-artifact@v3
+      with:
+        name: cfn-nag-artifact
+        path: ${{ github.workspace }}/cfn_nag_scan.out

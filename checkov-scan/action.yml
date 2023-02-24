@@ -1,0 +1,29 @@
+name: 'checkov-action'
+description: 'CloudFormation Static Code Analysis Tool Suite with checkov'
+inputs:
+  cloudformation-directory:
+    description: 'directory within git repo to scan cloudformation templates'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install checkov
+      shell: bash
+      run: |
+          pip3 install checkov
+
+    - name: Run CFN Checkov
+      shell: bash
+      run: |
+          checkov -s -d ./ --quiet --output cli > cfn_checkov.out
+
+    - name: Archive output
+      uses: actions/upload-artifact@v3
+      with:
+        name: cnf-checkov-artifact
+        path: ${{ github.workspace }}/cfn_checkov.out
