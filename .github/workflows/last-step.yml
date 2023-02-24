@@ -1,0 +1,10 @@
+name: last Step
+on:
+  workflow_call:
+jobs:
+  last-step:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set Image tag
+      id: set-image-tag
+      run: echo "image_tag=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT

@@ -20,24 +20,31 @@ jobs:
       app-name: ${{ inputs.app-name }}  
     secrets: inherit
   
-  dependency-check:
-    needs: build
-    uses: cnighojkar/myworkflows/.github/workflows/dependency-check.yml@main
-    with:
-      java-version: ${{ inputs.java-version }}
+  # dependency-check:
+  #   needs: build
+  #   uses: cnighojkar/myworkflows/.github/workflows/dependency-check.yml@main
+  #   with:
+  #     java-version: ${{ inputs.java-version }}
 
   # cfn-nag-scan:
   #   uses: cnighojkar/myworkflows/.github/workflows/cfn-nag-scan.yml@main
   #   needs: build
 
-  # checkov-scan:
-  #   uses: cnighojkar/myworkflows/.github/workflows/checkov-scan.yml@main
-  #   needs: build
+  checkov-scan:
+    uses: cnighojkar/myworkflows/.github/workflows/checkov-scan.yml@main
+    needs: build
 
-  # Ivan-scan:
-  #   uses: cnighojkar/myworkflows/.github/workflows/Ivan-scan.yml@main
-  #   needs: build
-  #   with:
-  #     version: ${{ inputs.version }}  
-  #     app-name: ${{ inputs.app-name }}  
-  #   secrets: inherit
+  Ivan-scan:
+    uses: cnighojkar/myworkflows/.github/workflows/Ivan-scan.yml@main
+    needs: build
+    with:
+      version: ${{ inputs.version }}  
+      app-name: ${{ inputs.app-name }}  
+    secrets: inherit
+  
+  last-step:
+    uses: cnighojkar/myworkflows/.github/workflows/last-step.yml@main
+    needs: [Ivan-scan, checkov-scan]
+
+
+    
