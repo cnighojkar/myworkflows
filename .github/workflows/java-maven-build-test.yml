@@ -15,7 +15,7 @@ on:
 jobs:
   build:
   # uses: cnighojkar/myworkflows/.github/workflows/build.yml@main
-    uses: cnighojkar/myworkflows/build/@main
+    uses: cnighojkar/myworkflows/.github/workflows/actions/build@main
     with:
       java-version: ${{ inputs.java-version }}  
       app-name: ${{ inputs.app-name }}  
