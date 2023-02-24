@@ -35,7 +35,7 @@ jobs:
     - name: Print CVE Summery on GITHUB_STEP_SUMMARY
       shell: bash
       run: |
-        docker run --rm -i jauderho/miller:latest --csv cut -f CVE,DependencyName < target/dependency-check-report.csv >> $GITHUB_STEP_SUMMARY
+        docker run --rm -i jauderho/miller:latest --icsv --opprint cut -f CVE,DependencyName < target/dependency-check-report.csv >> $GITHUB_STEP_SUMMARY
         echo >> $GITHUB_STEP_SUMMARY
         echo "Download the Artifact dependency-check-report to see more details" >> $GITHUB_STEP_SUMMARY
 
