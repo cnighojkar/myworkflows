@@ -14,11 +14,15 @@ on:
         type: string
 jobs:
   build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
   # uses: cnighojkar/myworkflows/.github/workflows/build.yml@main
-    uses: cnighojkar/myworkflows/.github/workflows/actions/build@main
-    with:
-      java-version: ${{ inputs.java-version }}  
-      app-name: ${{ inputs.app-name }}  
+      - name: Setup environment with Poetry
+        uses: ./.github/actions/build
+        with:
+          java-version: ${{ inputs.java-version }}  
+          app-name: ${{ inputs.app-name }}  
     # secrets: inherit
   
   # dependency-check:
