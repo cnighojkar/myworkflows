@@ -31,9 +31,13 @@ jobs:
     - name: Publishing result on Build & Test summary Section
       shell: bash
       run: | 
-        echo Found `cat Docker_image_CVE.json | jq '[.vulnerabilities[] | select(.Severity | contains("CRITICAL"))] | length'` CRITICAL CVEs >> $GITHUB_STEP_SUMMARY
-        echo Found `cat Docker_image_CVE.json | jq '[.vulnerabilities[] | select(.Severity | contains("HIGH"))] | length'` HIGH CVEs >> $GITHUB_STEP_SUMMARY
-        echo "Download the Artifact Docker-image-CVE to see more details" >> $GITHUB_STEP_SUMMARY
+          echo "## Ivan Image scan results"  >> $GITHUB_STEP_SUMMARY
+          echo >> $GITHUB_STEP_SUMMARY
+          echo "| Product | High Severities | Critical Severities | ">> $GITHUB_STEP_SUMMARY
+          echo "|----------|------------------|--------------------| ">> $GITHUB_STEP_SUMMARY
+          jq -r '[.vulnerabilities | group_by(.Product,.Severity) | map((.[0] | {"Product":.Product}) + {"\(.[0] | .Severity)":length}) | group_by (.Product)[] | reduce .[] as $item ({}; . *= $item)] | map ("|\(.Product) | \(.HIGH) | \(.CRITICAL)| ")[] ' < Docker_image_CVE.json >> $GITHUB_STEP_SUMMARY
+          echo >> $GITHUB_STEP_SUMMARY
+          echo "Download the Artifact Docker-image-CVE to see more details" >> $GITHUB_STEP_SUMMARY
 
     - name: Archive as artifact
       uses: actions/upload-artifact@v3
