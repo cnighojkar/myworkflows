@@ -13,6 +13,12 @@ jobs:
   Ivan-scan:
     runs-on: ubuntu-latest
     steps:
+
+    - name: Pull Docker Image 
+      shell: bash
+      run: |
+            docker pull ${{inputs.docker-image}}
+
     - name: Run ivan Docker Image CVE Scan (CrowdStrike)
       shell: bash
       run: |
