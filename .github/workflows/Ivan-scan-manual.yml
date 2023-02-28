@@ -1,0 +1,36 @@
+name: Docker Image scan using Ivan workflow
+
+on:
+  workflow_dispatch:
+    inputs:   
+      version:
+        description: ivan version to be installed 
+        default: '0.3.0'
+      docker-image:
+        description: docker image with repo name and tag to be scanned with Ivan
+        type: string
+jobs:
+  Ivan-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run ivan Docker Image CVE Scan (CrowdStrike)
+      shell: bash
+      run: |
+        curl --location --silent https://github.com/CrowdStrike/ivan/releases/download/${{ inputs.version }}/ivan_${{ inputs.version }}_Linux_x86_64.tar.gz | tar xvzf -
+        ./ivan -region us-2 -image ${{inputs.docker-image}} > Docker_image_CVE.json
+      env:
+        FALCON_CLIENT_ID: ${{ secrets.FALCON_IVAN_CLIENT_ID }}
+        FALCON_CLIENT_SECRET: ${{ secrets.FALCON_IVAN_CLIENT_SECRET }}
+    
+    - name: Publishing result on Build & Test summary Section
+      shell: bash
+      run: | 
+        echo Found `cat Docker_image_CVE.json | jq '[.vulnerabilities[] | select(.Severity | contains("CRITICAL"))] | length'` CRITICAL CVEs >> $GITHUB_STEP_SUMMARY
+        echo Found `cat Docker_image_CVE.json | jq '[.vulnerabilities[] | select(.Severity | contains("HIGH"))] | length'` HIGH CVEs >> $GITHUB_STEP_SUMMARY
+        echo "Download the Artifact Docker-image-CVE to see more details" >> $GITHUB_STEP_SUMMARY
+
+    - name: Archive as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Docker-image-CVE
+        path: ${{ github.workspace }}/Docker_image_CVE.json
