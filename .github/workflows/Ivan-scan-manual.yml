@@ -32,7 +32,7 @@ jobs:
       shell: bash
       run: | 
           echo "## Ivan Image scan results for" ${{inputs.docker-image}}   >> $GITHUB_STEP_SUMMARY
-          echo "Total Vulnerabilities=" cat Docker_image_CVE.json  | jq .count>> $GITHUB_STEP_SUMMARY
+          echo "Total Vulnerabilities=`cat Docker_image_CVE.json  | jq .count`">> $GITHUB_STEP_SUMMARY
           echo >> $GITHUB_STEP_SUMMARY
           echo "| Product | Critical Severities | HIGH Severities | Medium Severities | Low Severities |  ">> $GITHUB_STEP_SUMMARY
           echo "|----------|------------------|--------------------|--------------------|--------------------| ">> $GITHUB_STEP_SUMMARY
