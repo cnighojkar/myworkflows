@@ -20,6 +20,13 @@ runs:
   steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      
+      - uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-owasp-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-owasp-
 
       - name: Setup JDK
         uses: actions/setup-java@v3
@@ -33,13 +40,13 @@ runs:
         run: |
           mvn dependency-check:check -Dformat=CSV
       
-      - name: Cache local Maven repository
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository/org/owasp/dependency-check-data/7.0/nvdcache/
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+      # - name: Cache local Maven repository
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/.m2/repository/org/owasp/dependency-check-data/7.0/nvdcache/
+      #     key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-maven-
     
       - name: Print CVE Summery on GITHUB_STEP_SUMMARY
         shell: bash
