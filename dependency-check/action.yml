@@ -1,0 +1,57 @@
+name: 'Pull Request Pattern for Java Applications'
+description: 'Standard pattern for pull requests for Java/Maven-based Applications'
+
+inputs:
+  java-version:
+    description: 'Version of Java to build with'
+    default: '8'
+    required: false
+  java-distro:
+    description: "Distribution of Java to use"
+    default: 'temurin'
+    required: false
+  java-cache:
+    description: "Enable caching for the specified build platform: `maven`, `gradle`, `sbt`, ''"
+    default: 'maven'
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          cache: ${{ inputs.java-cache }}
+          distribution: ${{ inputs.java-distro }}
+          java-version: ${{ inputs.java-version }}
+      
+      - name: Dependency check with org.owasp:dependency-check-maven
+        shell: bash
+        run: |
+          mvn dependency-check:check -Dformat=CSV
+      
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository/org/owasp/dependency-check-data/7.0/nvdcache/
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+    
+      - name: Print CVE Summery on GITHUB_STEP_SUMMARY
+        shell: bash
+        run: |
+          docker run --rm -i jauderho/miller:latest --omd --icsv cut -f CVE,Identifiers,CVSSv2_Severity < target/dependency-check-report.csv >> $GITHUB_STEP_SUMMARY
+          echo >> $GITHUB_STEP_SUMMARY
+          echo "Download the Artifact dependency-check-report to see more details" >> $GITHUB_STEP_SUMMARY
+
+      - name: Archive dependency-check-report as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: ${{ github.workspace }}/target/dependency-check-report.csv
+
+      

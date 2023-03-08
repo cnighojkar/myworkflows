@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name:  Run dependency-check
-        uses: cnighojkar/myworkflows/.github/workflows/dependency-check.yml@main
+        uses: cnighojkar/myworkflows/dependency-check@main
         with:
           java-version: ${{ inputs.java-version }}
 
