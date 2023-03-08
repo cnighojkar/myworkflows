@@ -17,19 +17,20 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
-  # uses: cnighojkar/myworkflows/.github/workflows/build.yml@main
-      # - name: Build java Application
-      #   uses: cnighojkar/myworkflows/.github/actions/build
-      #   with:
-      #     java-version: ${{ inputs.java-version }}  
-      #     app-name: ${{ inputs.app-name }}  
-    # secrets: inherit
+      - name: Build java Application
+        uses: cnighojkar/myworkflows/.github/actions/build
+        with:
+          java-version: ${{ inputs.java-version }}  
+          app-name: ${{ inputs.app-name }}  
+
   
   dependency-check:
-    # needs: build
-    uses: cnighojkar/myworkflows/.github/workflows/dependency-check.yml@main
-    with:
-      java-version: ${{ inputs.java-version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name:  Run dependency-check
+        uses: cnighojkar/myworkflows/.github/workflows/dependency-check.yml@main
+        with:
+          java-version: ${{ inputs.java-version }}
 
   # cfn-nag-scan:
   #   uses: cnighojkar/myworkflows/.github/workflows/cfn-nag-scan.yml@main

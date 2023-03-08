@@ -39,8 +39,8 @@ jobs:
         echo >> $GITHUB_STEP_SUMMARY
         echo "Download the Artifact dependency-check-report to see more details" >> $GITHUB_STEP_SUMMARY
 
-    - name: Archive dependency-check-report as artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: dependency-check-report
-        path: ${{ github.workspace }}/target/dependency-check-report.csv
+    # - name: Archive dependency-check-report as artifact
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: dependency-check-report
+    #     path: ${{ github.workspace }}/target/dependency-check-report.csv
