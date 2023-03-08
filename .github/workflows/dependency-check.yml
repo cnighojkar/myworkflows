@@ -27,7 +27,7 @@ jobs:
     - name: Cache local Maven repository
       uses: actions/cache@v3
       with:
-        path: ~/.m2/repository
+        path: ~/.m2/repository/org/owasp/dependency-check-data/7.0/nvdcache/
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
@@ -35,7 +35,7 @@ jobs:
     - name: Print CVE Summery on GITHUB_STEP_SUMMARY
       shell: bash
       run: |
-        docker run --rm -i jauderho/miller:latest --icsv --opprint cut -f CVE,DependencyName < target/dependency-check-report.csv >> $GITHUB_STEP_SUMMARY
+        docker run --rm -i jauderho/miller:latest --omd --icsv cut -f CVE,Identifiers,CVSSv2_Severity < target/dependency-check-report.csv >> $GITHUB_STEP_SUMMARY
         echo >> $GITHUB_STEP_SUMMARY
         echo "Download the Artifact dependency-check-report to see more details" >> $GITHUB_STEP_SUMMARY
 
