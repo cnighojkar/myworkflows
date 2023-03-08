@@ -13,15 +13,15 @@ on:
       app-name:
         type: string
 jobs:
-  build:
-    name: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build java Application
-        uses: cnighojkar/myworkflows/.github/actions/build
-        with:
-          java-version: ${{ inputs.java-version }}  
-          app-name: ${{ inputs.app-name }}  
+  # build:
+  #   name: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Build java Application
+  #       uses: cnighojkar/myworkflows/.github/actions/build
+  #       with:
+  #         java-version: ${{ inputs.java-version }}  
+  #         app-name: ${{ inputs.app-name }}  
 
   
   dependency-check:
